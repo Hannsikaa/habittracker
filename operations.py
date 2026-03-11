@@ -61,9 +61,8 @@ def search_habit(name):
     for h in habits:
         if h['name'].lower()==name.lower():
             status = "Done" if h["status"] else "Pending"
-            print(f"{h['name']} : {status} : {h['streak']}")
-            return
-        print("Habit not found")
+            return (f"{h['name']} : {status} : {h['streak']}")
+    return "Habit not found"
 
 def mark_habit_done(done_habits):
     for i in done_habits:
@@ -79,4 +78,5 @@ def reset_all():
     save_habits()
 
 def leaderboard_sort():
-    h=sorted(habits, key=lambda x: x['streak'])
+    h=sorted(habits, key=lambda x: x['streak'],reverse=True)
+    return h
