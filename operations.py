@@ -1,5 +1,6 @@
 import time
 import json
+from database import get_connection
 
 try:
     with open("habits.json", "r") as file:
@@ -8,23 +9,41 @@ try:
 except:
     habits = []
 
+
+def get_habits():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM habits")
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in rows]
+
 def save_habits():
     with open("habits.json", "w") as file:
         json.dump(habits, file, indent=4)
     # everytime vadadam kanna once function better kada
 
 def add_habits(name):
-    habit={
-        'name': name,
-        'status': False,
-        'streak': 0
-    }
-    for h in habits:
-        if h['name'].lower()==name.lower():
-            print("Habit already exists.")
-            return
-    habits.append(habit) # obviously add cheyyanike
-    save_habits()
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO habits (name, status, streak) VALUES (?, ?, ?)",
+            (name, False, 0)
+        )
+        conn.commit()
+        return True
+
+    except:
+        return False
+
+    finally:
+        conn.close()
 
 def show_habits():
     print("Loading habits....\n") # loadingggg....
@@ -45,8 +64,8 @@ def change_habit_name(name,newname):
         if name.lower()==h['name'].lower():
             h['name']=newname
             save_habits()
-            return
-    print("Habit not Found")
+            return True
+    return False
     
 
 def delete_habit(name):
@@ -54,8 +73,8 @@ def delete_habit(name):
         if name.lower()==h['name'].lower():
             habits.remove(h)
             save_habits()
-            return
-    print("Habit not Found")
+            return True
+    return False
 
 def search_habit(name):
     for h in habits:
