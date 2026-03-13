@@ -52,3 +52,8 @@ def search_habit(name: str):
 def leaderboard_sort():
     result= operations.leaderboard_sort()
     return {"message": result}
+
+@app.get("/habits/stats")
+def stats():
+    result= operations.stats_habits()
+    return {"message": result}
