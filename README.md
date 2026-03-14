@@ -1,89 +1,101 @@
-# Habit Tracker CLI
+# Habit Tracker REST API
 
-A simple command line habit tracker built with Python.  
-It allows users to track daily habits, maintain streaks, and manage habits directly from the terminal.
+A backend REST API for tracking daily habits built using Python and FastAPI.
+This project allows users to create, manage, and track habits while maintaining streaks and viewing habit statistics.
+
+## Overview
+
+The Habit Tracker API provides endpoints to manage habits including creation, completion tracking, renaming, deletion, search, and leaderboard ranking based on streak performance.
+
+This project demonstrates backend API development, database interaction, and input validation using modern Python frameworks.
 
 ## Features
 
-- Add new habits
-- View all habits
-- Mark habits as completed
-- Track streaks
-- Rename habits
-- Delete habits
-- Search habits
-- Reset daily status
-- Leaderboard based on streaks
-- Data persistence using JSON
+* Create new habits
+* Mark habits as completed
+* Rename existing habits
+* Delete habits
+* Search habits by name
+* View leaderboard based on streak performance
+* Habit statistics
+* Input validation using Pydantic
+* Error handling with HTTP exceptions
+
+## Tech Stack
+
+* Python
+* FastAPI
+* Pydantic
+* SQLite
+* REST API Architecture
 
 ## Project Structure
 
-habit-tracker-cli  
-│  
-├── main.py           # CLI interface and menu system  
-├── operations.py     # Habit logic and operations  
-├── habits.json       # Stored habit data  
-├── README.md         # Project documentation  
-└── requirements.txt  # Dependencies  
+app/
+main.py – API routes and application entry point
+operations.py – business logic for habit operations
+schemas.py – request and response models
+habits.db – SQLite database
 
-## How to Run
+## API Endpoints
 
-1. Make sure Python is installed.
+### Get all habits
 
-2. Clone the repository
+GET /habits
 
-git clone <your-repository-url>
+### Add a new habit
 
+POST /habits
 
-3. Navigate into the project folder
+### Mark habit as completed
 
+PUT /habits/done
 
-cd habit-tracker-cli
+### Rename a habit
 
+PUT /habits/change_name
 
-4. Run the program
+### Delete a habit
 
+DELETE /habits/{name}
 
-python main.py
+### Search habit
 
+GET /habits/search?name=habitname
 
-## Example Usage
+### Habit leaderboard
 
+GET /habits/leaderboard
 
-Add Habit
+### Habit statistics
 
-Show Habits
+GET /habits/stats
 
-Change Habit Name
+## Example Habit Response
 
-Mark Habit Done
+{
+"id": 1,
+"name": "exercise",
+"status": false,
+"streak": 3
+}
 
-Delete Habit
+## Key Concepts Demonstrated
 
-Reset All
-
-Search Habit
-
-Exit
-
-Leaderboard
-
-
-Users can enter the number corresponding to the action they want to perform.
-
-## Technologies Used
-
-- Python
-- JSON file storage
-- Command Line Interface (CLI)
+* REST API design
+* Backend architecture separation (routes, schemas, operations)
+* Data validation using Pydantic
+* Database CRUD operations
+* Exception handling in APIs
 
 ## Future Improvements
 
-- Date-based habit tracking
-- Weekly and monthly streak analytics
-- Export habits to CSV
-- Convert CLI into a web app
+* User authentication system
+* Multi-user habit tracking
+* PostgreSQL database support
+* Deployment to cloud
+* Frontend dashboard
 
 ## Author
 
-Created as a beginner Python project to practice data structures, file handling, and CLI program design.
+Hannsikaa Podishetti
