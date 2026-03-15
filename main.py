@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 import operations
-from schemas import HabitCreate, HabitIndex, HabitRename
+from schemas import *
 
 app = FastAPI()
 

@@ -5,19 +5,31 @@ def get_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def create_table():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # USERS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        password TEXT
+    )
+    """)
+
+    # HABITS TABLE
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS habits (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE,
+        user_id INTEGER,
+        name TEXT,
         status BOOLEAN,
-        streak INTEGER
+        streak INTEGER,
+        FOREIGN KEY(user_id) REFERENCES users(id)
     )
     """)
 
     conn.commit()
     conn.close()
-
