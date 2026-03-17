@@ -1,6 +1,9 @@
 import time
 import json
 from database import get_connection
+from auth import *
+from schemas import *
+from fastapi import HTTPException
 
 def get_habits():
     conn = get_connection()
@@ -115,8 +118,9 @@ def mark_habit_done(id):
         conn.commit()
         return True
 
-    except:
-        return False
+    except Exception as e:
+        print(e)
+        return False    
 
     finally:
         conn.close()
@@ -191,3 +195,28 @@ def stats_habits():
     completed = completed_habits()
     highest = highest_streak()
     return {"total": total, "completed": completed, "highest": highest}
+
+def signup(user: UserCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check if user already exists
+    cursor.execute("SELECT * FROM users WHERE username = ?", (user.username,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already exists")
+
+    # Hash password
+    hashed_password = hash_password(user.password)
+
+    # Insert user
+    cursor.execute(
+        "INSERT INTO users (username, password) VALUES (?, ?)",
+        (user.username, hashed_password)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return {"message": "User created successfully"}

@@ -25,3 +25,7 @@ class HabitResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+class UserCreate(BaseModel):
+    username: str
+    password: str

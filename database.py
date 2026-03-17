@@ -25,6 +25,7 @@ def create_table():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         name TEXT,
+        UNIQUE(user_id, name)
         status BOOLEAN,
         streak INTEGER,
         FOREIGN KEY(user_id) REFERENCES users(id)

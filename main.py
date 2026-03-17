@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import operations
 from schemas import *
+from auth import *
 
 app = FastAPI()
 
@@ -21,7 +22,7 @@ def add_habit(name: HabitCreate):
 
 @app.put("/habits/done",response_model=MessageResponse)
 def mark_done(index: HabitIndex):
-    operations.mark_habit_done([index.index])
+    operations.mark_habit_done(index.index)
     return {"message": "Habit marked done"}
 
 @app.put("/habits/change_name",response_model=MessageResponse)
@@ -54,3 +55,7 @@ def leaderboard_sort():
 @app.get("/habits/stats",response_model=list[HabitResponse])
 def stats():
     return operations.stats_habits()
+
+@app.post("/signup",response_model=MessageResponse)
+def signup_habits(user: UserCreate):
+    return operations.signup(user)
