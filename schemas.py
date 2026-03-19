@@ -29,3 +29,6 @@ class MessageResponse(BaseModel):
 class UserCreate(BaseModel):
     username: str
     password: str
+
+class TokenResponse(BaseModel):
+    token: str

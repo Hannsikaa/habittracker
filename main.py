@@ -59,3 +59,7 @@ def stats():
 @app.post("/signup",response_model=MessageResponse)
 def signup_habits(user: UserCreate):
     return operations.signup(user)
+
+@app.post("/login",response_model=TokenResponse)
+def login_habits(user: UserCreate):
+    return operations.login(user)

@@ -1,4 +1,4 @@
-from passlib.context import CryptContext
+from passlib.context import CryptContext 
 from jose import jwt
 from datetime import datetime, timedelta
 
@@ -23,7 +23,6 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 # token ni chese method
-# token ante oka sari login ayte token create aytadi so malli malli check cheyyakunda token tho login aytadi
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES) # current time+ expire ayye time

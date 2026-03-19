@@ -5,11 +5,11 @@ from auth import *
 from schemas import *
 from fastapi import HTTPException
 
-def get_habits():
+def get_habits(user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM habits")
+    cursor.execute("SELECT * FROM habits WHERE user_id = ?", (user_id,))
 
     rows = cursor.fetchall()
 
@@ -203,6 +203,7 @@ def signup(user: UserCreate):
     # Check if user already exists
     cursor.execute("SELECT * FROM users WHERE username = ?", (user.username,))
     existing_user = cursor.fetchone()
+    print(user)
 
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
@@ -212,11 +213,36 @@ def signup(user: UserCreate):
 
     # Insert user
     cursor.execute(
-        "INSERT INTO users (username, password) VALUES (?, ?)",
-        (user.username, hashed_password)
+        "INSERT INTO users (user_id, username, password) VALUES (?, ?, ?)",
+        (user.user_id, user.username, hashed_password)
     )
 
     conn.commit()
     conn.close()
 
     return {"message": "User created successfully"}
+
+def login(user: UserCreate):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Check if user exists
+    cursor.execute("SELECT * FROM users WHERE username = ?", (user.username,))
+    existing_user = cursor.fetchone()
+
+    if not existing_user:
+        raise HTTPException(status_code=400, detail="Username doesn't exists")
+
+    # Hash password
+    stored_hashed_password = existing_user["password"]
+
+    if not verify_password(user.password, stored_hashed_password):
+        raise HTTPException(status_code=400, detail="Password Incorrect")
+
+    token=create_access_token({"user_id": existing_user["id"]})
+
+
+    conn.commit()
+    conn.close()
+
+    return {"token": token}
