@@ -200,27 +200,31 @@ def signup(user: UserCreate):
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Check if user already exists
-    cursor.execute("SELECT * FROM users WHERE username = ?", (user.username,))
-    existing_user = cursor.fetchone()
-    print(user)
+    try:
+        cursor.execute("SELECT * FROM users WHERE username = ?", (user.username,))
+        existing_user = cursor.fetchone()
 
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Username already exists")
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already exists")
 
-    # Hash password
-    hashed_password = hash_password(user.password)
+        print("Hashing password...")
+        hashed_password = hash_password(user.password)
 
-    # Insert user
-    cursor.execute(
-        "INSERT INTO users (user_id, username, password) VALUES (?, ?, ?)",
-        (user.user_id, user.username, hashed_password)
-    )
+        print("Inserting user...")
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (user.username, hashed_password)
+        )
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        return {"message": "User created successfully"}
 
-    return {"message": "User created successfully"}
+    except Exception as e:
+        print("ERROR IN SIGNUP:", str(e))   # 🔥 THIS IS KEY
+        raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
+        conn.close()
 
 def login(user: UserCreate):
     conn = get_connection()
